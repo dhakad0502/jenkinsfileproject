@@ -1,37 +1,42 @@
-
-
-pipeline {
+pipeline{
     agent any
-    
-   
-    
     stages {
-        stage('Hello') {
-            steps {
-                echo 'Hello World'
+        stage('one'){
+            steps{
+                echo "hi this is my first pipeline"
             }
         }
-        stage('build') {
+        stage('two'){
             steps {
-                echo 'Hello World you are going to build '
-                echo "Hello World you are going to build WITH VERSION ${NEW_VERSION}"
+                input ("Do you want to procees")
             }
         }
-        stage('Test') {
-            
-            when{
-                expression{
-                params.executeTeste
+        stage('three'){
+            when {
+                not {
+                    branch "master"
                 }
             }
-            steps {
-                echo 'Hello World you are going to test '
+            steps{
+                echo "branch is not master"
             }
         }
-        stage('Deploy') {
-            steps {
-                echo 'Hello World you are going to Deploy '
+        stage('four'){
+            parallel {
+                stage('unit test'){
+                     steps{
+                         echo "running unit testing....."
+                    }
+                }
+                stage('integration testing'){
+                        steps{
+                            echo "running  the integration testing...."
+                        }
+                    }
+                }
             }
-        }
+
+        
+        
     }
 }
